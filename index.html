@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html" charset="ISO-8859-15">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="diffView.css">
+    <title>TEST</title>
+</head>
+<body>
+    <div id="selectBtn">
+        <input type="file" name="filePicker" id="filePickerL">
+        <input type="file" name="filePicker" id="filePickerR">
+        
+    </div>
+    <div class="files">
+        <!-- <textarea class="leftText"  cols="70" rows="30" id="Ltext"></textarea>
+        <textarea class="rightText" cols="70" rows="30" id="Rtext"></textarea>
+        <div class="leftText" id="textareaDifferences" contenteditable="true"></div> -->
+
+        <div class="leftText" contenteditable="true" id="Ltext"></div>
+        <div class="rightText" contenteditable="true" id="Rtext"></div>
+       
+
+    </div>
+    <div class="tableContainer difftable" id="textareaDifferences">
+        
+      
+    </div>
+    <button id="compare" >compare</button>
+    <!-- <script src="scripts.js" onclick="buttonCompareClicked();"></script> -->
+    <script  src="fs.js"></script>
+    
+</body>
+</html>
