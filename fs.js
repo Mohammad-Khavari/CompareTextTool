@@ -37,7 +37,7 @@ inputL.addEventListener('change',()=>{
 
     reader.readAsText(file,"ISO-8859-15");
 
-    console.log( reader)
+    //console.log( reader)
     
 })
 
@@ -129,45 +129,111 @@ function showDifference(L,R,LN,RN){
 
 }
 
-
-
 compare.addEventListener("pointerdown",()=>{
     const length = document.querySelectorAll(".Ltext").length;
     let leftId = 0;
     let rightId = 0;
 
-    
     for (let i = 0 ; i < length ; i++){
-        const p = document.createElement("p");
         const fileL  = document.querySelector(".leftText").childNodes[leftId].textContent;
-        const fileL2  = document.querySelector(".leftText").childNodes[leftId]
-
         const fileR = document.querySelector(".rightText").childNodes[rightId].textContent;
+        const left = document.querySelectorAll("td.leftLine");
+        const right = document.querySelectorAll("td.rightLine");
         
-        
-        //console.log("fileL: ",fileL.textContent);
-        //console.log("fileR: ",fileR.innerText);
-        
-        let result = fileL.localeCompare(fileR)
-        if (result === 1 || result === -1){
-            // const fileR2 = document.querySelectorAll(".equal");
-            // fileR2.forEach(replace => {
-            //     replace.classList.remove("equal");
-
-            //     replace.classList.add("double")
-            // });
+        left.forEach((elm,index)=>{
+            if (elm.textContent !== right[index].textContent){
+               
+                //right[index].classList.add("double")
+            }
             
-        }
+        })
+        //showDifference(fileL,fileR,leftId,rightId);
         
-        showDifference(fileL,fileR,leftId,rightId);
+
+        const color ="";
+        let span = null;
+        const diff = Diff.diffChars(fileL,fileR),
+        display = document.querySelector("#tb"),
+        fragment = document.createDocumentFragment();
         
-        
+        diff.forEach(part =>{
+            const color = part.added ? 'green' : part.removed ? 'red' : 'grey';
+            span = document.createElement('span');
+            //td = document.createElement('td');
+            span.appendChild(document.createTextNode(part.value));
+            span.style.color = color;
+            fragment.appendChild(span)
+            const po = "beforeend";
+            const td = ` 
+                <tr>
+                    <th>${leftId +1}</th>
+                    <td class="leftLine" style ="color:${color}">${fileL}</td>
+                    <th>${rightId +1}</th>
+                    <td class="rightLine" >${fragment}</td>
+                </tr>
+                `;
+            //fragment.appendChild(td)
+            //console.log("td",td)
+            display.insertAdjacentHTML(po,td)
+        });
+        //display.appendChild(fragment);
+
         leftId++
         rightId++
     }
+        
+    
     
 
 })
+
+
+
+// compare.addEventListener("pointerdown",()=>{
+//     const length = document.querySelectorAll(".Ltext").length;
+//     let leftId = 0;
+//     let rightId = 0;
+
+    
+//     for (let i = 0 ; i < length ; i++){
+//         const p = document.createElement("p");
+//         const fileL  = document.querySelector(".leftText").childNodes[leftId].textContent;
+//         const fileL2  = document.querySelector(".leftText").childNodes[leftId]
+
+//         const fileR = document.querySelector(".rightText").childNodes[rightId].textContent;
+//         const left = document.querySelectorAll("td.leftLine");
+//         const right = document.querySelectorAll("td.rightLine");
+       
+//         left.forEach((elm,index)=>{
+//             if (elm.textContent !== right[index].textContent){
+               
+//                 right[index].classList.add("double")
+//             }
+//         })
+        
+//         //console.log("fileL: ",fileL.textContent);
+//         //console.log("fileR: ",fileR.innerText);
+        
+//         let result = fileL.localeCompare(fileR)
+//         if (result === 1 || result === -1){
+//             // const fileR2 = document.querySelectorAll(".equal");
+//             // fileR2.forEach(replace => {
+//             //     replace.classList.remove("equal");
+
+//             //     replace.classList.add("double")
+//             // });
+            
+//         }
+        
+//         showDifference(fileL,fileR,leftId,rightId);
+        
+        
+//         leftId++
+//         rightId++
+//     }
+    
+
+// })
 //==========================================================================================
 //   RIGHT TEXT
 //==========================================================================================
