@@ -6,21 +6,20 @@ const textareaR = document.querySelector('.rightText');
 const compare = document.getElementById("compare");
 
 
-
+//==========================================================================================
+//   LEFT TEXT
+//==========================================================================================
 inputL.addEventListener('change',()=>{
     const files = inputL.files;
     
     if(files.length === 0) return;
     const file = files[0];
-    //console.log("Value in reader", file)
     
     const reader = new FileReader();
     
     reader.onload = (e)=>{
         const file = e.target.result;
         const lines = file.split(/\r\n|\n/);
-        //console.log(lines)
-        const htmlData = ``
         
         lines.forEach(element => {
             const p = document.createElement("p")
@@ -28,7 +27,6 @@ inputL.addEventListener('change',()=>{
             p.textContent = element;
 
             textareaL.append(p)
-            //textareaL.textContent = element
             
         });
        
@@ -37,64 +35,8 @@ inputL.addEventListener('change',()=>{
 
     reader.readAsText(file,"ISO-8859-15");
 
-    console.log( reader)
-    
 })
 
-// inputL.addEventListener('change',()=>{
-//     const lines = inputL.files;
-
-//     if (lines.length === 0) return;
-//     file = lines[0];
-//     const readerByLine = new FileReader();
-
-//     readerByLine.onload = (e)=>{
-//          const fileContentArray = e.target.result.split(/\r\n|\n/);
-//           for (var line = 0; line < fileContentArray.length -1; line++) {
-//              //console.log(line + "-->" + fileContentArray[line]);
-//              //textarea2.value = fileContentArray.join("\r\n");
-//             }
-//         }
-//         readerByLine.readAsText(file, "ISO-8859-15")
-    
-// });
-// const textArea = document.getElementById("textareaDifferences");
-// const pos = "beforeend";
-// const tableDiff = `  <table class="diff">
-// <thead>
-//     <tr>
-//         <th></th>
-//         <th class="texttitle">First File</th>
-//         <th></th>
-//         <th class="texttitle">Second File</th>
-//     </tr> 
-// </thead>
-
-// <tbody id="diffData"></tbody>
-
-// </table>`;
-// tableDiff.insertAdjacentHTML(pos, tableDiff)
-
-// function loadDiffData(diffs){
-// const tbody = document.getElementById("diffData");
-// let dataTable = '';
-
-// for (let diff of diffs){
-//    dataTable += ` <tr>
-//    <th>1</th>
-//    <td class="equal">My Table</td>
-//    <th>1</th>
-//    <td class="equal">My Table</td>
-// </tr>
-// <tr>
-//    <th>2</th>
-//    <td class="replace">My Table</td>
-//    <th>2</th>
-//    <td class="replace">My Table</td>
-// </tr>`;
-// }
-// tbody.innerHTML = dataTable;
-// }
 const diff = document.getElementById("textareaDifferences");
 const pos = "beforeend";
     
@@ -132,42 +74,109 @@ function showDifference(L,R,LN,RN){
 
 
 compare.addEventListener("pointerdown",()=>{
-    const length = document.querySelectorAll(".Ltext").length;
+    let length;
+    const Ltext = document.querySelectorAll(".Ltext").length;
+    const Rtext = document.querySelectorAll(".Rtext").length;
+    if (Ltext < Rtext){
+        length = Rtext
+    }else{
+        length = Ltext
+    }
+    console.log("length: ", length,"/\n/","Ltext: ",Ltext,"/\n/","Rtext: ",Rtext)
     let leftId = 0;
     let rightId = 0;
 
     
     for (let i = 0 ; i < length ; i++){
-        const p = document.createElement("p");
-        const fileL  = document.querySelector(".leftText").childNodes[leftId].textContent;
-        const fileL2  = document.querySelector(".leftText").childNodes[leftId]
+        let fileL  = document.querySelector(".leftText").childNodes[leftId]?.textContent;
+        
+        let fileR = document.querySelector(".rightText").childNodes[rightId]?.textContent;
+        if (fileR === undefined){
+            fileR = 'DELETED';
 
-        const fileR = document.querySelector(".rightText").childNodes[rightId].textContent;
+            showDifference(fileL,fileR,leftId,rightId);
         
         
-        //console.log("fileL: ",fileL.textContent);
-        //console.log("fileR: ",fileR.innerText);
-        
-        let result = fileL.localeCompare(fileR)
-        if (result === 1 || result === -1){
-            // const fileR2 = document.querySelectorAll(".equal");
-            // fileR2.forEach(replace => {
-            //     replace.classList.remove("equal");
+            const rightLines = document.querySelectorAll(".rightLine");
+            const leftLines = document.querySelectorAll(".leftLine");
+            
+            let L = leftLines[i].textContent;
+            let R = rightLines[i].textContent;
+    
+            let result = L.localeCompare(R)
+            
+            if (result === 1 || result === -1){
+                rightLines[i].classList.add("double");
+                
+            }
 
-            //     replace.classList.add("double")
-            // });
+            //*****************************************************/
+            //  THIS METHOD IS ALTERNATIVE TO localeCompare()     //
+            //*****************************************************/
+            
+            // const rightLines = document.querySelectorAll(".rightLine");
+            // const leftLines = document.querySelectorAll(".leftLine");
+            // rightLines.forEach((elm,index)=>{
+            //     if (elm.textContent !== leftLines[index].textContent){
+            //         elm.classList.add("double")
+            //     }
+            // })
             
         }
+        else if (fileL === undefined){
+            fileL = 'DELETED';
+
+            showDifference(fileL,fileR,leftId,rightId);
         
-        showDifference(fileL,fileR,leftId,rightId);
         
+            const rightLines = document.querySelectorAll(".rightLine");
+            const leftLines = document.querySelectorAll(".leftLine");
+            
+            let L = leftLines[i].textContent;
+            let R = rightLines[i].textContent;
+    
+            let resultR = L.localeCompare(R)
+            let resultL = R.localeCompare(L);
+            console.log(resultL, L)
+            if (resultR === 1 || resultR === -1){
+                rightLines[i].classList.add("double");
+                
+            };
+            if (resultL === 1 || resultL === -1){
+                leftLines[i].classList.add("lFile")
+            }
+        }
+        else{
+            showDifference(fileL,fileR,leftId,rightId);
+        
+        
+            const rightLines = document.querySelectorAll(".rightLine");
+            const leftLines = document.querySelectorAll(".leftLine");
+            
+            let L = leftLines[i].textContent;
+            let R = rightLines[i].textContent;
+    
+            let resultR = L.localeCompare(R);
+            let resultL = R.localeCompare(L);
+            
+            if (resultR === 1 || resultR === -1){
+                rightLines[i].classList.add("double");
+                
+            }else if (resultL === 1 || resultL === -1){
+                leftLines[i].classList.add("original")
+            }
+        }
+       
         
         leftId++
         rightId++
+
+       
     }
     
 
 })
+
 //==========================================================================================
 //   RIGHT TEXT
 //==========================================================================================
@@ -199,43 +208,4 @@ inputR.addEventListener('change',()=>{
 
     reader.readAsText(file,"ISO-8859-15");
 
-    
-    
 })
-
-// inputR.addEventListener('change',()=>{
-//     const lines = inputR.files;
-
-//     if (lines.length === 0) return;
-//     file = lines[0];
-//     const readerByLine = new FileReader();
-
-//     readerByLine.onload = (e)=>{
-//          const fileContentArray = e.target.result.split(/\r\n|\n/);
-//           for (var line = 0; line < fileContentArray.length -1; line++) {
-//              //console.log(line + "-->" + fileContentArray[line]);
-//              //textarea2.value = fileContentArray.join("\r\n");
-//             }
-//         }
-//         readerByLine.readAsText(file, "ISO-8859-15")
-    
-// })
-
-// const fileL  = inputL.files;
-// const fileR = inputR.files;
-// const textL = fileL[0];
-// const textReaderLeft = new FileReader();
-// textReaderLeft.onload = (e)=>{
-//     const textL = e.target.result;
-//     const Lines = textL.split(/\r\n|\n/);
-
-//     Lines.forEach(e =>{
-//         const p = document.createElement("p");
-        
-//         p.textContent = e
-//         textareaR.append(p)
-//         //p.classList.add("Ltext")
-//     })
-// }
-// textReaderLeft.readAsText(textL, "ISO-8859-15")
-// //console.log("Left: ",fileL.length,"\n","Right: ",fileR.length)     
