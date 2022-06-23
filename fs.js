@@ -134,11 +134,22 @@ compare.addEventListener("pointerdown",()=>{
     let leftId = 0;
     let rightId = 0;
 
+    const color ="";
+    let span = null;
+    const spanArr = [];
+       
+
     for (let i = 0 ; i < length ; i++){
         const fileL  = document.querySelector(".leftText").childNodes[leftId].textContent;
         const fileR = document.querySelector(".rightText").childNodes[rightId].textContent;
         const left = document.querySelectorAll("td.leftLine");
         const right = document.querySelectorAll("td.rightLine");
+
+        const diff = Diff.diffChars(fileL,fileR),
+        display = document.querySelector("#tb");
+        const fragment = new DocumentFragment();
+        //fragment = document.createDocumentFragment();
+        const d = `<td class="rightLine" >${fragment}</td>`;
         
         left.forEach((elm,index)=>{
             if (elm.textContent !== right[index].textContent){
@@ -150,38 +161,39 @@ compare.addEventListener("pointerdown",()=>{
         //showDifference(fileL,fileR,leftId,rightId);
         
 
-        const color ="";
-        let span = null;
-        const diff = Diff.diffChars(fileL,fileR),
-        display = document.querySelector("#tb"),
-        fragment = document.createDocumentFragment();
         
-        diff.forEach(part =>{
+        const po = "beforeend";
+        const td = ` 
+            <tr>
+                <th>${leftId +1}</th>
+                <td class="leftLine" style ="color:${color}">${fileL}</td>
+                <th>${rightId +1}</th>
+                <td class="rightLine" ></td>
+            </tr>
+            `;
+        
+        display.insertAdjacentHTML(po,td);
+        
+
+        diff.forEach((part,index) =>{
             const color = part.added ? 'green' : part.removed ? 'red' : 'grey';
             span = document.createElement('span');
-            //td = document.createElement('td');
             span.appendChild(document.createTextNode(part.value));
             span.style.color = color;
             fragment.appendChild(span)
-            const po = "beforeend";
-            const td = ` 
-                <tr>
-                    <th>${leftId +1}</th>
-                    <td class="leftLine" style ="color:${color}">${fileL}</td>
-                    <th>${rightId +1}</th>
-                    <td class="rightLine" >${fragment}</td>
-                </tr>
-                `;
-            //fragment.appendChild(td)
-            //console.log("td",td)
-            display.insertAdjacentHTML(po,td)
+            console.log(part)
+            spanArr.push(fragment)
         });
-        //display.appendChild(fragment);
-
+       
+        
         leftId++
         rightId++
     }
+    const tdElms = document.querySelectorAll(".rightLine");
+    for (let i =0; i <tdElms.length; i++){
         
+        tdElms[i].appendChild(spanArr[i])
+    }
     
     
 
