@@ -78,9 +78,9 @@ compare.addEventListener("pointerdown",()=>{
     const Ltext = document.querySelectorAll(".Ltext").length;
     const Rtext = document.querySelectorAll(".Rtext").length;
     if (Ltext < Rtext){
-        length = Rtext
+        length = Rtext -2;
     }else{
-        length = Ltext
+        length = Ltext -2;
     }
     console.log("length: ", length,"/\n/","Ltext: ",Ltext,"/\n/","Rtext: ",Rtext)
     let leftId = 0;
@@ -88,9 +88,10 @@ compare.addEventListener("pointerdown",()=>{
 
     
     for (let i = 0 ; i < length ; i++){
-        let fileL  = document.querySelector(".leftText").childNodes[leftId]?.textContent;
         
+        let fileL  = document.querySelector(".leftText").childNodes[leftId]?.textContent;
         let fileR = document.querySelector(".rightText").childNodes[rightId]?.textContent;
+
         if (fileR === undefined){
             fileR = 'DELETED';
 
@@ -103,11 +104,16 @@ compare.addEventListener("pointerdown",()=>{
             let L = leftLines[i].textContent;
             let R = rightLines[i].textContent;
     
-            let result = L.localeCompare(R)
+            let result = L.localeCompare(R);
+
+            let resultL = R.localeCompare(L);
             
             if (result === 1 || result === -1){
                 rightLines[i].classList.add("double");
                 
+            }
+            if (resultL === 1 || resultL === -1){
+                leftLines[i].classList.add("original")
             }
 
             //*****************************************************/
@@ -157,13 +163,10 @@ compare.addEventListener("pointerdown",()=>{
             let R = rightLines[i].textContent;
     
             let resultR = L.localeCompare(R);
-            let resultL = R.localeCompare(L);
             
             if (resultR === 1 || resultR === -1){
                 rightLines[i].classList.add("double");
                 
-            }else if (resultL === 1 || resultL === -1){
-                leftLines[i].classList.add("original")
             }
         }
        
